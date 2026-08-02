@@ -16,8 +16,12 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
     "mysql2": "^3.22.1",
+    "openai": "^6.46.0",
+    "pdfkit": "^0.19.1",
     "sequelize": "^6.37.8",
     "socket.io": "^4.8.3"
   },

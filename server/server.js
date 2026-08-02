@@ -6,7 +6,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const jwt = require("jsonwebtoken");
 const socketService = require("./services/socket.service");
-const { sequelize, User } = require("./models/index");
+const { sequelize, User ,Notification} = require("./models/index");
+const departmentRoutes = require('./routes/department.route');
 
 const app = express();
 const server = http.createServer(app); // wrap express in http server
@@ -52,7 +53,6 @@ io.on("connection", (socket) => {
   // Client can manually mark notification as read via socket
   socket.on("mark_read", async ({ notificationId }) => {
     try {
-      const { Notification } = require("./models/index");
       await Notification.update(
         { is_read: true },
         { where: { id: notificationId, user_id: userId } },
@@ -73,13 +73,30 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 
 // ── Routes ───────────────────────────────────────────────────────────────────
-app.use("/api/auth", require("./routes/auth.route"));
-app.use("/api/expenses", require("./routes/expense.route"));
-app.use("/api/receipt", require("./routes/receipt.route"));
+app.use("/api/auth",          require("./routes/auth.route"));
+app.use("/api/expenses",      require("./routes/expense.route"));
+app.use("/api/receipt",       require("./routes/receipt.route"));
 app.use("/api/notifications", require("./routes/notification.route"));
-
+app.use('/api/budgets',       require('./routes/budget.route'));
+app.use('/api/departments', require('./routes/department.route'));
+app.use('/api/analytics', require('./routes/analytics.route'));
+app.use('/api/export', require('./routes/export.route'));
+app.use('/api/admin', require('./routes/admin.route'));
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
-
+// Root route — shows API is running
+app.get('/', (req, res) => {
+  res.json({
+    message: '✓ Expense Management API is running',
+    version: '1.0.0',
+    endpoints: {
+      health:        'GET  /api/health',
+      auth:          'POST /api/auth/login',
+      expenses:      'GET  /api/expenses',
+      analytics:     'GET  /api/analytics/summary',
+      notifications: 'GET  /api/notifications',
+    }
+  });
+});
 // ── Global error handler ─────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -91,16 +108,12 @@ app.use((err, req, res, next) => {
 // ── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-sequelize
-  .authenticate()
+// This tells Sequelize to safely alter the tables to match your models
+sequelize.authenticate()
   .then(() => {
-    console.log("✓ DB connected");
-    // Use server.listen not app.listen — socket.io needs the http server
-    server.listen(PORT, () =>
-      console.log(`✓ Server + Socket.io running on port ${PORT}`),
-    );
+    console.log("✓ DB synced with new columns");
+    server.listen(PORT, () => console.log(`✓ Server running on port ${PORT}`));
   })
   .catch((err) => {
     console.error("✗ DB failed:", err.message);
-    process.exit(1);
   });

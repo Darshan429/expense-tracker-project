@@ -10,7 +10,7 @@ router.post('/refresh',controller.refresh);
 router.post('/logout',protect,controller.logout);
 
 router.get('/me',protect , (req,res)=>{
-    res.json({user:req.user})
+ res.json({user:req.user})
 })
 
-module.exports = router
+module.exports = router 

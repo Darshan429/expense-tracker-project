@@ -57,3 +57,4 @@ exports.markOneRead = async (req, res) => {
     res.status(500).json({ error: "Failed to mark as read" });
   }
 };
+

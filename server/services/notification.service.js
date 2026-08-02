@@ -8,7 +8,7 @@ const socketService    = require('./socket.service');
  * If user is offline → socket emit is a no-op, DB row waits for them
  * If user is online  → they see the toast instantly AND DB row exists
  */
-const notify = async ({ userId, type, title, message, expenseId = null }) => {
+const notify = async  ({ userId, type, title, message, expenseId = null }) => {
   try {
     // 1. Always write to DB first — this is the guarantee
     const notif = await Notification.create({
@@ -30,9 +30,7 @@ const notify = async ({ userId, type, title, message, expenseId = null }) => {
       is_read:    false,
       created_at: notif.created_at
     });
-
     return notif;
-
   } catch (err) {
     // Never let notification failure crash the approval flow
     console.error('Notification service error:', err.message);

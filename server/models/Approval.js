@@ -22,8 +22,6 @@ const Approval = sequelize.define('Approval', {
     }
 }, {
     tableName: 'approvals', 
-    
-   
     timestamps: true,
     createdAt: 'approved_at', 
     updatedAt: false,         
@@ -32,4 +30,3 @@ const Approval = sequelize.define('Approval', {
 });
 
 module.exports = Approval;
-

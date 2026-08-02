@@ -34,15 +34,23 @@ const Expense = sequelize.define('Expense',{
 	status:{
 		type:DataTypes.ENUM('PENDING','APPROVED','REJECTED'),
 		allowNull:false,
-		defaultValue:'Pending'
+		defaultValue:'PENDING'
 	}},
 	{
 		tableName:'expenses',
 		timestamps:true,
-		underscored:true
+		underscored:true,
+		paranoid:true
 	}
 );
 
 module.exports=Expense;
-			
+
+
+
+
+
+
+
+		
 

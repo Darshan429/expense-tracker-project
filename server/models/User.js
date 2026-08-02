@@ -31,6 +31,11 @@ const User = sequelize.define('User', {
 	manager_id:{
 		type:DataTypes.INTEGER,
 		allowNull:true
+	},
+	is_active:{
+		type:DataTypes.BOOLEAN,
+		allowNull:false,
+		defaultValue:true
 	}
 },{
 	tableName:'users',

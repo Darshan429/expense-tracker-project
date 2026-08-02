@@ -32,7 +32,7 @@ exports.protect = async(req,res,next)=>{
 }
 
 exports.restrictTo=(...roles)=>(req,res,next)=>{
-    if(!roles.includes(req.user.roles)){
+    if(!roles.includes(req.user.role)){
         return res.status(403).json({
             error:`Access-Denied requires one of :${roles.join(',')}`
         })

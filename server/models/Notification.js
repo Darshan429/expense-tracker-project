@@ -37,7 +37,6 @@ const Notification = sequelize.define('Notification', {
     timestamps: true,
     createdAt: 'created_at', 
     updatedAt: false,        
-    
     underscored: true
 });
 

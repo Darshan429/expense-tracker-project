@@ -14,18 +14,17 @@ const generateAccessToken = (user) => jwt.sign(
 );
 
 const generateRefreshToken = ()=>{
-    crypto.randomBytes(64).toString('hex');
+    return crypto.randomBytes(64).toString('hex');
 }
 
-const hashtoken = (token)=>{
-    crypto.createHash('sha256').update(token).digest('hex')
+const hashToken = (token)=>{
+    return crypto.createHash('sha256').update(token).digest('hex')
 }
 
 
 //register
 exports.register = async(req,res)=>{
     try{
-        console.log("Incoming data from Postman:", req.body);
         if (!req.body.email) return res.status(400).json({ error: "Email is missing!" });
         
         const { name , email , password , role , department_id ,manager_id } = req.body
@@ -38,7 +37,7 @@ exports.register = async(req,res)=>{
             return res.status(400).json({error:`role must be one of the ${validRoles.join(" , ")}`});
         }
 
-        const existing = await User.findOne({Where:{ email }})
+        const existing = await User.findOne({where:{ email }})
         if(existing) return res.status(409).json({Error:'Email already registerd'})
 
         if(manager_id){
@@ -62,7 +61,7 @@ exports.register = async(req,res)=>{
             manager_id:manager_id||null
         });
 
-        const { password : _,...userData} = newUser.toJSON();
+        const { password : _,...userData} = user.toJSON();
         res.status(201).json({message:"User registered",user:userData})
     }
     catch(err){
@@ -98,8 +97,7 @@ exports.login = async(req,res)=>{
         //4.Generate access tokens
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken();
-        const tokenHash = hashToken(refreshToken)
-
+        const tokenHash = hashToken(refreshToken) 
         //5 Store refresh token hash in DB
         await RefreshToken.create({
             user_id:user.id,
@@ -114,7 +112,7 @@ exports.login = async(req,res)=>{
         res.json({
             accessToken,
             refreshToken,
-            user:userData
+            user:UserData
         })
     }
     catch(err){
@@ -138,7 +136,7 @@ exports.login = async(req,res)=>{
             }
 
             if(storedToken.revoked_at){
-                return res.status(401).json({error:'Refresh token expired - please log in again'});
+                return res.status(401).json({error:'Refresh token has been revoked'});
             }
 
             if(new Date() > storedToken.expires_at){
@@ -185,7 +183,7 @@ exports.login = async(req,res)=>{
             if(storedToken && !storedToken.revoked_at){
                 await storedToken.update({revoked_at: new Date()});
             }
-            res.json({meassage:'Logged out successfully'})
+            res.json({message:'Logged out successfully'})
         } 
         catch(err){
             console.error('Logout Error:',err);
