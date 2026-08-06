@@ -25,9 +25,11 @@ export default function Register() {
 
   const loadDepartments = async () => {
   try {
-    const { data } = await api.get('/departments');  // ← public route
+    const { data } = await api.get('/departments');
+    console.log('Departments loaded:', data);  // ← add this
     setDepartments(data);
-  } catch {
+  } catch (err) {
+    console.error('Failed to load departments:', err.response?.data);  // ← add this
     setDepartments([]);
   }
 };
