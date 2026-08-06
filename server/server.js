@@ -13,6 +13,12 @@ const app = express();
 const server = http.createServer(app); // wrap express in http server
 
 // ── Socket.io setup ─────────────────────────────────────────────────────────
+
+const allowedOrigins = [
+  'http://localhost:5173',                    
+  process.env.CLIENT_URL,                    
+].filter(Boolean);
+
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
