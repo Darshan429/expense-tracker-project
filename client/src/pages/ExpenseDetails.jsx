@@ -236,7 +236,6 @@ export default function ExpenseDetail() {
               />
               {expense.approval && (
                 <>
-                  console.log(expense.approval);
                   <DetailRow
                     label="Actioned by"
                     value={expense.approval?.manager?.name || '—'}
@@ -247,7 +246,7 @@ export default function ExpenseDetail() {
                   />
                   <DetailRow
                     label="Actioned at"
-                    value={formatDate(expense.approval?.actioned_at)}
+                    value={formatDate(expense.approval?.approved_at)}
                   />
                 </>
               )}
