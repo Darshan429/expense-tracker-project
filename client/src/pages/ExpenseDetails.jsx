@@ -20,6 +20,11 @@ export default function ExpenseDetail() {
   const [actionForm, setActionForm] = useState({ status: 'Approved', remarks: '' });
   const [submitting, setSubmitting] = useState(false);
 
+   console.log("Expense:", expense);
+  console.log("Approval:", expense?.approval);
+  console.log("Approved At:", expense?.approval?.approved_at);
+  console.log("Formatted:", formatDate(expense?.approval?.approved_at));
+
   useEffect(() => { fetchExpense(); }, [id]);
 
   const fetchExpense = async () => {
