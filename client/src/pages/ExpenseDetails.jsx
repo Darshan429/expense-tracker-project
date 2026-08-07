@@ -236,6 +236,7 @@ export default function ExpenseDetail() {
               />
               {expense.approval && (
                 <>
+                  console.log(expense.approval);
                   <DetailRow
                     label="Actioned by"
                     value={expense.approval?.manager?.name || '—'}
